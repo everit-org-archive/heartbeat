@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api;
+package org.everit.heartbeat.api.node;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -21,49 +21,35 @@ package org.everit.heartbeat.api;
  * MA 02110-1301  USA
  */
 
-import java.io.Serializable;
 import java.net.InetAddress;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.everit.heartbeat.api.dto.Node;
-
 /**
- * An abstract implementation of {@link ClusteringHeartbeatService} that gives the default node handling (adding and
- * querying) method implementations.
- * 
- * @param <M>
- *            The type of the message that will be sent in the heartbeat message.
+ * The default implementation of the {@link NodeProvider} that gives the default node handling (adding and querying)
+ * method implementations.
  */
-public abstract class AbstractClusteringHeartbeatService<M extends Serializable> implements
-        ClusteringHeartbeatService<M> {
+public class DefaultNodeManager implements NodeManager {
 
     /**
      * The nodes belonging to this cluster.
      */
     private final Map<InetAddress, Node> nodes = new HashMap<InetAddress, Node>();
 
-    /**
-     * Adds the given node to the {@link #nodes}.
-     * 
-     * @param node
-     *            The node to add.
-     * @return The previous value associated to the node ot <code>null</code> if the node was not present in the list.
-     */
-    protected final Node addNode(final Node node) {
+    @Override
+    public Node addNode(final Node node) {
         // TODO Implement
         return null;
     }
 
     @Override
-    public Collection<Node> getAllNodes() {
+    public Node[] getAllNodes() {
         // TODO Implement
         return null;
     }
 
     @Override
-    public Collection<Node> getLiveNodes(final long thresholdInMs, final boolean includingCurrentNode) {
+    public Node[] getLiveNodes(final long thresholdInMs, final boolean includingCurrentNode) {
         // TODO Implement
         return null;
     }
