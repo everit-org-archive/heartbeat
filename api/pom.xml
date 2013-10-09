@@ -21,41 +21,43 @@
     MA 02110-1301  USA
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.everit</groupId>
-        <artifactId>heartbeat</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.everit</groupId>
+		<artifactId>heartbeat</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
 
-    <groupId>org.everit.heartbeat</groupId>
-    <artifactId>org.everit.heartbeat.api</artifactId>
+	<groupId>org.everit.heartbeat</groupId>
+	<artifactId>org.everit.heartbeat.api</artifactId>
 
-    <packaging>bundle</packaging>
+	<packaging>bundle</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Import-Package>
-                            *
-                        </Import-Package>
-                        <Export-Package>
-                            org.everit.heartbeat.api,
-                            org.everit.heartbeat.api.dto
-                        </Export-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Import-Package>
+							*
+						</Import-Package>
+						<Export-Package>
+							org.everit.heartbeat.api,
+							org.everit.heartbeat.api.dto,
+							org.everit.heartbeat.api.node
+						</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

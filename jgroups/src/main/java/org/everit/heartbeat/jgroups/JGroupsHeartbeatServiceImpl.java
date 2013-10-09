@@ -23,19 +23,26 @@ package org.everit.heartbeat.jgroups;
 
 import java.io.Serializable;
 
-import org.everit.heartbeat.api.AbstractClusteringHeartbeatService;
+import org.everit.heartbeat.api.HeartbeatService;
 import org.everit.heartbeat.api.MessageListener;
+import org.everit.heartbeat.api.node.NodeProvider;
 
 /**
- * The implementation of {@link AbstractClusteringHeartbeatService} that sends and receives heartbeat messages via
- * JGroups.
+ * The implementation of {@link HeartbeatService} that sends and receives heartbeat messages via JGroups.
  * 
  * @see http://www.jgroups.org/
  * 
  * @param <M>
  *            The type of the message that will be sent in the heartbeat message.
  */
-public class JGroupsHeartbeatServiceImpl<M extends Serializable> extends AbstractClusteringHeartbeatService<M> {
+public class JGroupsHeartbeatServiceImpl<M extends Serializable> implements HeartbeatService<M> {
+
+    private final NodeProvider nodeProvider;
+
+    public JGroupsHeartbeatServiceImpl(final NodeProvider nodeProvider) {
+        super();
+        this.nodeProvider = nodeProvider;
+    }
 
     @Override
     public void setMessage(final M message) {
