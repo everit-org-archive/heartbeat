@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.dto;
+package org.everit.heartbeat.api.node;
 
 /*
  * Copyright (c) 2013, Everit Kft.
