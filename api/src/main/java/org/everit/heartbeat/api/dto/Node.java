@@ -61,6 +61,11 @@ public class Node implements Serializable {
      */
     public Node(final InetAddress inetAddress, final long lastHeartbeatReveivedAt, final String gourpId) {
         super();
+        
+        if(inetAddress == null){
+            throw new IllegalArgumentException();
+        }
+
         this.inetAddress = inetAddress;
         this.lastHeartbeatReveivedAt = lastHeartbeatReveivedAt;
         this.gourpId = gourpId;

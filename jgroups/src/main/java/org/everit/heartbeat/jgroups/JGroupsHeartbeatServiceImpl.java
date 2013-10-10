@@ -21,10 +21,18 @@ package org.everit.heartbeat.jgroups;
  * MA 02110-1301  USA
  */
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 import org.everit.heartbeat.api.AbstractClusteringHeartbeatService;
 import org.everit.heartbeat.api.MessageListener;
+import org.everit.heartbeat.api.dto.Node;
+import org.jgroups.Address;
+import org.jgroups.JChannel;
+import org.jgroups.Message;
+import org.jgroups.Receiver;
+import org.jgroups.View;
 
 /**
  * The implementation of {@link AbstractClusteringHeartbeatService} that sends and receives heartbeat messages via
@@ -35,11 +43,16 @@ import org.everit.heartbeat.api.MessageListener;
  * @param <M>
  *            The type of the message that will be sent in the heartbeat message.
  */
-public class JGroupsHeartbeatServiceImpl<M extends Serializable> extends AbstractClusteringHeartbeatService<M> {
+public class JGroupsHeartbeatServiceImpl<M extends Serializable> extends AbstractClusteringHeartbeatService<M> implements Receiver{
 
+    private JChannel channel;
+    private long period;
+    private M message;
+    
     @Override
     public void setMessage(final M message) {
         // TODO Implement
+        this.message = message;
     }
 
     @Override
@@ -51,12 +64,25 @@ public class JGroupsHeartbeatServiceImpl<M extends Serializable> extends Abstrac
     @Override
     public void setPeriod(final long period) {
         // TODO Implement
+        if (period <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.period = period;
 
     }
 
     @Override
     public void start() {
         // TODO Implement
+        try {
+            channel = new JChannel();
+            channel.connect("Cluster1");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        eventLoop();
     }
 
     @Override
@@ -64,4 +90,64 @@ public class JGroupsHeartbeatServiceImpl<M extends Serializable> extends Abstrac
         // TODO Implement
     }
 
+    @Override
+    public void receive(Message msg) {
+        // TODO Auto-generated method stub
+        addNode((Node) msg.getObject());
+    }
+
+    @Override
+    public void getState(OutputStream output) throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setState(InputStream input) throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void viewAccepted(View new_view) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void suspect(Address suspected_mbr) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void block() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void unblock() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void eventLoop() {
+        while(true) {
+
+            try {
+
+                Message msg=new Message(null, null, message);
+                channel.send(msg);
+                
+                wait(period);
+
+            }
+
+            catch(Exception e) {
+
+            }
+
+        }
+    }
 }

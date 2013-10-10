@@ -20,12 +20,14 @@ package org.everit.heartbeat.api;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.everit.heartbeat.api.dto.Node;
 
@@ -49,23 +51,40 @@ public abstract class AbstractClusteringHeartbeatService<M extends Serializable>
      * 
      * @param node
      *            The node to add.
-     * @return The previous value associated to the node ot <code>null</code> if the node was not present in the list.
+     * @return The previous value associated to the node or <code>null</code> if the node was not present in the list.
+     * @throws IllegalArgumentException
+     *             If the <code>node</code> argument is <code>null</code>.
      */
     protected final Node addNode(final Node node) {
         // TODO Implement
-        return null;
+        if (node == null) {
+            throw new IllegalArgumentException();
+        }
+        return nodes.put(node.getInetAddress(), node);
     }
 
     @Override
     public Collection<Node> getAllNodes() {
         // TODO Implement
-        return null;
+        List<Node> listOfNodes = new ArrayList<Node>();
+
+        for (Entry<InetAddress, Node> i : nodes.entrySet()) {
+            listOfNodes.add(i.getValue());
+        }
+        return listOfNodes;
     }
 
     @Override
     public Collection<Node> getLiveNodes(final long thresholdInMs, final boolean includingCurrentNode) {
         // TODO Implement
-        return null;
+        List<Node> listOfNodes = new ArrayList<Node>();
+
+        for (Entry<InetAddress, Node> i : nodes.entrySet()) {
+            if (i.getValue().getLastHeartbeatReveivedAt() > (System.currentTimeMillis() - thresholdInMs)) {
+                listOfNodes.add(i.getValue());
+            }
+        }
+        return listOfNodes;
     }
 
 }
