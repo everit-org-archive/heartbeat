@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.dto;
+package org.everit.heartbeat.api.node;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -42,7 +42,7 @@ public class Node implements Serializable {
     /**
      * The timestamp of the last received heartbeat message from this node.
      */
-    private final long lastHeartbeatReveivedAt;
+    private final long lastHeartbeatReceivedAt;
 
     /**
      * The ID of the group inside the cluster.
@@ -61,13 +61,11 @@ public class Node implements Serializable {
      */
     public Node(final InetAddress inetAddress, final long lastHeartbeatReveivedAt, final String gourpId) {
         super();
-        
-        if(inetAddress == null){
+        if (inetAddress == null) {
             throw new IllegalArgumentException();
         }
-
         this.inetAddress = inetAddress;
-        this.lastHeartbeatReveivedAt = lastHeartbeatReveivedAt;
+        lastHeartbeatReceivedAt = lastHeartbeatReveivedAt;
         this.gourpId = gourpId;
     }
 
@@ -97,7 +95,7 @@ public class Node implements Serializable {
         } else if (!inetAddress.equals(other.inetAddress)) {
             return false;
         }
-        if (lastHeartbeatReveivedAt != other.lastHeartbeatReveivedAt) {
+        if (lastHeartbeatReceivedAt != other.lastHeartbeatReceivedAt) {
             return false;
         }
         return true;
@@ -111,8 +109,8 @@ public class Node implements Serializable {
         return inetAddress;
     }
 
-    public long getLastHeartbeatReveivedAt() {
-        return lastHeartbeatReveivedAt;
+    public long getLastHeartbeatReceivedAt() {
+        return lastHeartbeatReceivedAt;
     }
 
     @Override
@@ -121,13 +119,13 @@ public class Node implements Serializable {
         int result = 1;
         result = (prime * result) + ((gourpId == null) ? 0 : gourpId.hashCode());
         result = (prime * result) + ((inetAddress == null) ? 0 : inetAddress.hashCode());
-        result = (prime * result) + (int) (lastHeartbeatReveivedAt ^ (lastHeartbeatReveivedAt >>> 32));
+        result = (prime * result) + (int) (lastHeartbeatReceivedAt ^ (lastHeartbeatReceivedAt >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
-        return "Node [inetAddress=" + inetAddress + ", lastHeartbeatReveivedAt=" + lastHeartbeatReveivedAt
+        return "Node [inetAddress=" + inetAddress + ", lastHeartbeatReceivedAt=" + lastHeartbeatReceivedAt
                 + ", gourpId=" + gourpId + "]";
     }
 

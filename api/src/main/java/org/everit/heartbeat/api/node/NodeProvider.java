@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api;
+package org.everit.heartbeat.api.node;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -21,26 +21,18 @@ package org.everit.heartbeat.api;
  * MA 02110-1301  USA
  */
 
-import java.io.Serializable;
-import java.util.Collection;
-
-import org.everit.heartbeat.api.dto.Node;
-
 /**
- * A {@link HeartbeatService} that supports clustering functionalities, i.e. querying the {@link Node}s that are in the
- * same cluster as the current one.
- * 
- * @param <M>
- *            The type of the message that will be sent in the heartbeat message.
+ * An interface that supports clustering functionalities, i.e. querying the {@link Node}s that are in the same cluster
+ * as the current one.
  */
-public interface ClusteringHeartbeatService<M extends Serializable> extends HeartbeatService<M> {
+public interface NodeProvider {
 
     /**
      * Queries all the {@link Node}s that are in the same cluster as the current one.
      * 
      * @return The {@link Node}s.
      */
-    Collection<Node> getAllNodes();
+    Node[] getAllNodes();
 
     /**
      * Queries the {@link Node}s that fulfills the following criteria:
@@ -53,11 +45,8 @@ public interface ClusteringHeartbeatService<M extends Serializable> extends Hear
      * 
      * @param thresholdInMs
      *            The threshold in milliseconds.
-     * @param includingCurrentNode
-     *            <code>true</code> if the query must include the current node in the result, <code>false</code> if the
-     *            query must exclude the current node from the result.
      * @return The {@link Node}s.
      */
-    Collection<Node> getLiveNodes(long thresholdInMs, boolean includingCurrentNode);
+    Node[] getLiveNodes(long thresholdInMs);
 
 }
