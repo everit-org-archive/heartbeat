@@ -23,10 +23,10 @@ package org.everit.heartbeat.api.node;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The default implementation of the {@link NodeProvider} that gives the default node handling (adding and querying)
@@ -37,7 +37,7 @@ public class DefaultNodeManager implements NodeManager {
     /**
      * The nodes belonging to this cluster.
      */
-    private final Map<InetAddress, Node> nodes = new HashMap<InetAddress, Node>();
+    private final Map<InetAddress, Node> nodes = new ConcurrentHashMap<InetAddress, Node>();
 
     @Override
     public Node addNode(final Node node) {

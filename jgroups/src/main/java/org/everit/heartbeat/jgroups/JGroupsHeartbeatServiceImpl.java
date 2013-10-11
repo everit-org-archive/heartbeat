@@ -23,6 +23,8 @@ package org.everit.heartbeat.jgroups;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.everit.heartbeat.api.HeartbeatService;
 import org.everit.heartbeat.api.MessageListener;
@@ -39,7 +41,7 @@ import org.jgroups.ReceiverAdapter;
  * 
  * @see http://www.jgroups.org/
  * 
- * @param <M>
+ * @param <NodeMessage>
  *            The type of the message that will be sent in the heartbeat message.
  */
 public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage> {
@@ -48,38 +50,32 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
     private JChannel channel;
     private long period = 1000;
     private NodeMessage ownMessage;
-    private MessageListener messageListener;
-    private boolean loopCond;
+    private MessageListener messageListener = null;
+    private String clusterName;
+    private Timer timer;
 
-    public JGroupsHeartbeatServiceImpl(final NodeManager nodeManager, final NodeMessage message) {
+    public JGroupsHeartbeatServiceImpl(final NodeManager nodeManager, final NodeMessage message,
+            final String clusterName) {
         super();
         this.nodeManager = nodeManager;
         ownMessage = message;
+        this.clusterName = clusterName;
     }
 
-    public void eventLoop() {
-        Thread t = new Thread() {
+    public void messageSender() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                while (loopCond) {
-                    try {
-                        Message msg = new Message(null, ownMessage);
-                        channel.send(msg);
-                        // System.out.println(ownMessage + " says -> message sent: " + ownMessage);
-                        Thread.sleep(period);
-                    } catch (Exception e) {
-
-                    }
+                Message msg = new Message(null, ownMessage);
+                try {
+                    channel.send(msg);
+                } catch (Exception e) {
+                    System.out.println("Exception occured when trying to send Heartbeat message");
+                    e.printStackTrace();
                 }
             }
-        };
-        t.start();
-        /*
-         * while (loopCond) { try { Message msg = new Message(null, ownMessage); channel.send(msg);
-         * Thread.sleep(period); } catch (Exception e) {
-         * 
-         * } }
-         */
+        }, 0, period);
     }
 
     @Override
@@ -104,7 +100,7 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
     public void start() {
         try {
             channel = new JChannel();
-            channel.connect("Cluster1");
+            channel.connect(clusterName);
             channel.setReceiver(new ReceiverAdapter() {
                 @Override
                 public void receive(final Message msg) {
@@ -113,28 +109,26 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
                         Node nodeToAdd = new Node(InetAddress.getByName(message.getAddress()), System
                                 .currentTimeMillis(), message.getGroupId());
                         nodeManager.addNode(nodeToAdd);
-                        // System.out.println(ownMessage + " says -> message recieved and added: " + nodeToAdd);
 
-                        // messageListener.afterMessageReceived(msg);
+                        if (messageListener != null) {
+                            messageListener.afterMessageReceived(msg);
+                        }
                     } catch (UnknownHostException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
 
                 }
             });
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            System.out.println("Exception occured when connecting to a Cluster");
             e.printStackTrace();
         }
-        loopCond = true;
-        eventLoop();
+        messageSender();
     }
 
     @Override
     public void stop() {
-        loopCond = false;
+        timer.cancel();
         channel.close();
-        // System.out.println(ownMessage + " says -> Stopped! ");
     }
 }

@@ -4,13 +4,19 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import org.everit.heartbeat.api.node.DefaultNodeManager;
-import org.everit.heartbeat.api.node.Node;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Class to test the DefaultNodeManager class.
+ */
 public class DefaultNodeManagerTest {
 
+    /**
+     * Testing the addNode() and getAllNodes() function of the DefaultNodeManager class.
+     * 
+     * @throws UnknownHostException
+     */
     @Test
     public void addAndGetNodeTest() throws UnknownHostException {
         DefaultNodeManager cHBServ = new DefaultNodeManager();
@@ -37,12 +43,20 @@ public class DefaultNodeManagerTest {
 
     }
 
+    /**
+     * Testing the addNode method with null parameter.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void addNullTest() {
         DefaultNodeManager cHBServ = new DefaultNodeManager();
         cHBServ.addNode(null);
     }
 
+    /**
+     * Testing the getLiveNodes() method.
+     * 
+     * @throws UnknownHostException
+     */
     @Test
     public void getLiveNodesTest() throws UnknownHostException {
         DefaultNodeManager cHBServ = new DefaultNodeManager();

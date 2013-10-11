@@ -39,8 +39,6 @@ public interface NodeProvider {
      * <ul>
      * <li>The timestamp of the last heartbeat message received from the node is greater than
      * <code>(System.currentTimeMillis() - thresholdInMs)</code>.</li>
-     * <li>The address of the node equals to the address of the current node or not, depending on the
-     * <code>includingCurrentNode</code> parameter</li>
      * </ul>
      * 
      * @param thresholdInMs

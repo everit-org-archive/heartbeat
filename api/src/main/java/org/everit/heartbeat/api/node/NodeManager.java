@@ -21,7 +21,9 @@ package org.everit.heartbeat.api.node;
  * MA 02110-1301  USA
  */
 
-
+/**
+ * An interface which provides functionality to add new Node to the managed ones.
+ */
 public interface NodeManager extends NodeProvider {
 
     /**
