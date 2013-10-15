@@ -55,6 +55,10 @@ public class NodeMessage implements Serializable {
         return groupId;
     }
 
+    public void setGroupId(final String groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     public String toString() {
         return "NodeMessage [address=" + address + ", groupId=" + groupId + "]";

@@ -34,10 +34,11 @@ import org.everit.heartbeat.api.node.NodeMessage;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The implementation of {@link AbstractClusteringHeartbeatService} that sends and receives heartbeat messages via
- * JGroups.
+ * The implementation of {@link HeartbeatService} that sends and receives heartbeat messages via JGroups.
  * 
  * @see http://www.jgroups.org/
  * 
@@ -46,6 +47,7 @@ import org.jgroups.ReceiverAdapter;
  */
 public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JGroupsHeartbeatServiceImpl.class);
     private final NodeManager nodeManager;
     private JChannel channel;
     private long period = 1000;
@@ -62,7 +64,7 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
         this.clusterName = clusterName;
     }
 
-    public void messageSender() {
+    private void messageSender() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -71,8 +73,7 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
                 try {
                     channel.send(msg);
                 } catch (Exception e) {
-                    System.out.println("Exception occured when trying to send Heartbeat message");
-                    e.printStackTrace();
+                    LOGGER.error("Failed to send heartbeat message", e);
                 }
             }
         }, 0, period);
@@ -114,14 +115,16 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
                             messageListener.afterMessageReceived(msg);
                         }
                     } catch (UnknownHostException e) {
-                        e.printStackTrace();
+                        LOGGER.error(
+                                "Failed to get InetAddress from message.getAddress(). No IP address for the host could be found",
+                                e);
                     }
 
                 }
             });
         } catch (Exception e) {
-            System.out.println("Exception occured when connecting to a Cluster");
-            e.printStackTrace();
+            LOGGER.error("Failed to create JChannel or connect to Cluster. " + e.getMessage(), e);
+            throw new RuntimeException("Failed to create JChannel or connect to Cluster. " + e.getMessage(), e);
         }
         messageSender();
     }

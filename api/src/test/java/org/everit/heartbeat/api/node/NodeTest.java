@@ -20,7 +20,6 @@ public class NodeTest {
             new Node(null, 0, null);
             Assert.fail("constructor should fail with IllegalArgumentException in case of null inetAddress");
         } catch (IllegalArgumentException e) {
-
         }
     }
 
