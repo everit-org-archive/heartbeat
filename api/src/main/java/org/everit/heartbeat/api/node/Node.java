@@ -40,6 +40,11 @@ public class Node implements Serializable {
     private final InetAddress inetAddress;
 
     /**
+     * The port where the node can be accessed.
+     */
+    private final int port;
+
+    /**
      * The timestamp of the last received heartbeat message from this node.
      */
     private final long lastHeartbeatReveivedAt;
@@ -54,14 +59,18 @@ public class Node implements Serializable {
      * 
      * @param inetAddress
      *            The address of the node.
+     * @param port
+     *            The port where the node can be accessed.
      * @param lastHeartbeatReveivedAt
      *            The timestamp of the last received heartbeat message from this node.
      * @param gourpId
      *            The ID of the group inside the cluster.
      */
-    public Node(final InetAddress inetAddress, final long lastHeartbeatReveivedAt, final String gourpId) {
+    public Node(final InetAddress inetAddress, final int port,
+            final long lastHeartbeatReveivedAt, final String gourpId) {
         super();
         this.inetAddress = inetAddress;
+        this.port = port;
         this.lastHeartbeatReveivedAt = lastHeartbeatReveivedAt;
         this.gourpId = gourpId;
     }
@@ -95,6 +104,9 @@ public class Node implements Serializable {
         if (lastHeartbeatReveivedAt != other.lastHeartbeatReveivedAt) {
             return false;
         }
+        if (port != other.port) {
+            return false;
+        }
         return true;
     }
 
@@ -110,6 +122,10 @@ public class Node implements Serializable {
         return lastHeartbeatReveivedAt;
     }
 
+    public int getPort() {
+        return port;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -117,13 +133,14 @@ public class Node implements Serializable {
         result = (prime * result) + ((gourpId == null) ? 0 : gourpId.hashCode());
         result = (prime * result) + ((inetAddress == null) ? 0 : inetAddress.hashCode());
         result = (prime * result) + (int) (lastHeartbeatReveivedAt ^ (lastHeartbeatReveivedAt >>> 32));
+        result = (prime * result) + port;
         return result;
     }
 
     @Override
     public String toString() {
-        return "Node [inetAddress=" + inetAddress + ", lastHeartbeatReveivedAt=" + lastHeartbeatReveivedAt
-                + ", gourpId=" + gourpId + "]";
+        return "Node [inetAddress=" + inetAddress + ", port=" + port + ", lastHeartbeatReveivedAt="
+                + lastHeartbeatReveivedAt + ", gourpId=" + gourpId + "]";
     }
 
 }
