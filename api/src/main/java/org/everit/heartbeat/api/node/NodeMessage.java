@@ -18,6 +18,11 @@ public class NodeMessage implements Serializable {
     private final String address;
 
     /**
+     * The port of the represented Node.
+     */
+    private final int port;
+
+    /**
      * The groupId of the represented Node.
      */
     private String groupId = null;
@@ -27,10 +32,13 @@ public class NodeMessage implements Serializable {
      * 
      * @param address
      *            The address of the represented Node.
+     * @param port
+     *            The port of the represented Node.
      */
-    public NodeMessage(final String address) {
+    public NodeMessage(final String address, final int port) {
         super();
         this.address = address;
+        this.port = port;
     }
 
     /**
@@ -38,12 +46,15 @@ public class NodeMessage implements Serializable {
      * 
      * @param address
      *            The address of the represented Node.
+     * @param port
+     *            The port of the represented Node.
      * @param groupId
      *            The groupId of the represented Node.
      */
-    public NodeMessage(final String address, final String groupId) {
+    public NodeMessage(final String address, final int port, final String groupId) {
         super();
         this.address = address;
+        this.port = port;
         this.groupId = groupId;
     }
 
@@ -53,6 +64,10 @@ public class NodeMessage implements Serializable {
 
     public String getGroupId() {
         return groupId;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public void setGroupId(final String groupId) {

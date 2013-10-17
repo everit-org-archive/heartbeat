@@ -1,6 +1,6 @@
 package org.everit.heartbeat.api.node;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import org.junit.Assert;
@@ -41,14 +41,14 @@ public class NodeTest {
     @Test
     public void testSuccess() throws UnknownHostException {
 
-        InetAddress inetAddress = InetAddress.getByName("192.168.1.1");
+        InetSocketAddress inetSocketAddress = InetSocketAddress.createUnresolved("192.168.1.1", 500);
         long lastHeartbeatReceivedAt = 123;
         String gourpId = "123";
-        Node testNode = new Node(inetAddress, lastHeartbeatReceivedAt, gourpId);
+        Node testNode = new Node(inetSocketAddress, lastHeartbeatReceivedAt, gourpId);
 
         Assert.assertNotNull(testNode);
-        Assert.assertEquals(inetAddress,
-                testNode.getInetAddress());
+        Assert.assertEquals(inetSocketAddress,
+                testNode.getInetSocketAddress());
         Assert.assertEquals(lastHeartbeatReceivedAt,
                 testNode.getLastHeartbeatReceivedAt());
         Assert.assertEquals(gourpId,

@@ -21,8 +21,7 @@ package org.everit.heartbeat.jgroups;
  * MA 02110-1301  USA
  */
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.InetSocketAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,10 +61,6 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
         this.nodeManager = nodeManager;
         ownMessage = message;
         this.clusterName = clusterName;
-    }
-
-    public NodeMessage getOwnMessage() {
-        return ownMessage;
     }
 
     private void messageSender() {
@@ -119,18 +114,14 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
             @Override
             public void receive(final Message msg) {
                 NodeMessage message = (NodeMessage) msg.getObject();
-                try {
-                    Node nodeToAdd = new Node(InetAddress.getByName(message.getAddress()), System
-                            .currentTimeMillis(), message.getGroupId());
-                    nodeManager.addNode(nodeToAdd);
 
-                    if (messageListener != null) {
-                        messageListener.afterMessageReceived(msg);
-                    }
-                } catch (UnknownHostException e) {
-                    LOGGER.error(
-                            "Failed to get InetAddress from message.getAddress(). No IP address for the host could be found.",
-                            e);
+                Node nodeToAdd = new Node(InetSocketAddress.createUnresolved(message.getAddress(),
+                        message.getPort()), System
+                        .currentTimeMillis(), message.getGroupId());
+                nodeManager.addNode(nodeToAdd);
+
+                if (messageListener != null) {
+                    messageListener.afterMessageReceived(msg);
                 }
 
             }

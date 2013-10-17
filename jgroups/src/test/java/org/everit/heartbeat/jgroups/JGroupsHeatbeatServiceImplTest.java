@@ -25,11 +25,11 @@ public class JGroupsHeatbeatServiceImplTest {
         manager2 = new DefaultNodeManager();
         manager3 = new DefaultNodeManager();
         JGroupsHeartbeatServiceImpl service1 = new JGroupsHeartbeatServiceImpl(manager1,
-                new NodeMessage("192.1.1.1"), "theCluster");
+                new NodeMessage("192.1.1.1", 10), "theCluster");
         JGroupsHeartbeatServiceImpl service2 = new JGroupsHeartbeatServiceImpl(manager2,
-                new NodeMessage("192.1.1.2"), "theCluster");
+                new NodeMessage("192.1.1.2", 10), "theCluster");
         JGroupsHeartbeatServiceImpl service3 = new JGroupsHeartbeatServiceImpl(manager3,
-                new NodeMessage("192.1.1.3"), "anotherCluster");
+                new NodeMessage("192.1.1.3", 10), "anotherCluster");
 
         service1.setPeriod(1000);
         service2.setPeriod(2000);
@@ -70,19 +70,19 @@ public class JGroupsHeatbeatServiceImplTest {
 
         for (Node node : list1) {
             Assert.assertTrue(node.getLastHeartbeatReceivedAt() < System.currentTimeMillis());
-            Assert.assertTrue((node.getInetAddress().getHostAddress().equals("192.1.1.1"))
-                    || (node.getInetAddress().getHostAddress().equals("192.1.1.2")));
+            Assert.assertTrue((node.getInetSocketAddress().getHostString().equals("192.1.1.1"))
+                    || (node.getInetSocketAddress().getHostString().equals("192.1.1.2")));
         }
 
         for (Node node : list2) {
             Assert.assertTrue(node.getLastHeartbeatReceivedAt() < System.currentTimeMillis());
-            Assert.assertTrue((node.getInetAddress().getHostAddress().equals("192.1.1.1"))
-                    || (node.getInetAddress().getHostAddress().equals("192.1.1.2")));
+            Assert.assertTrue((node.getInetSocketAddress().getHostString().equals("192.1.1.1"))
+                    || (node.getInetSocketAddress().getHostString().equals("192.1.1.2")));
         }
 
         service3.stop();
 
-        service1.getOwnMessage().setGroupId("testGroupId");
+        service1.setMessage(new NodeMessage("192.1.1.1", 10, "testGroupId"));
         Thread.sleep(2000);
 
         list1 = Arrays.asList(manager1.getAllNodes());
@@ -96,7 +96,7 @@ public class JGroupsHeatbeatServiceImplTest {
         }
         Assert.assertTrue(contains);
 
-        service1.setMessage(new NodeMessage("192.2.2.1", "hello"));
+        service1.setMessage(new NodeMessage("192.2.2.1", 10, "hello"));
 
         Thread.sleep(2000);
 

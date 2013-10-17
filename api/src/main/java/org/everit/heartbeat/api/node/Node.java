@@ -22,7 +22,7 @@ package org.everit.heartbeat.api.node;
  */
 
 import java.io.Serializable;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
  * Class that represents a node in a cluster.
@@ -37,7 +37,7 @@ public class Node implements Serializable {
     /**
      * The address of the node.
      */
-    private final InetAddress inetAddress;
+    private final InetSocketAddress inetSocketAddress;
 
     /**
      * The timestamp of the last received heartbeat message from this node.
@@ -52,20 +52,21 @@ public class Node implements Serializable {
     /**
      * Constructor.
      * 
-     * @param inetAddress
+     * @param inetSocketAddress
      *            The address of the node.
-     * @param lastHeartbeatReveivedAt
+     * @param lastHeartbeatReceivedAt
      *            The timestamp of the last received heartbeat message from this node.
      * @param gourpId
      *            The ID of the group inside the cluster.
      */
-    public Node(final InetAddress inetAddress, final long lastHeartbeatReveivedAt, final String gourpId) {
+    public Node(final InetSocketAddress inetSocketAddress,
+            final long lastHeartbeatReceivedAt, final String gourpId) {
         super();
-        if (inetAddress == null) {
-            throw new IllegalArgumentException();
+        if (inetSocketAddress == null) {
+            throw new IllegalArgumentException("inetSocketAddress can not be null.");
         }
-        this.inetAddress = inetAddress;
-        lastHeartbeatReceivedAt = lastHeartbeatReveivedAt;
+        this.inetSocketAddress = inetSocketAddress;
+        this.lastHeartbeatReceivedAt = lastHeartbeatReceivedAt;
         this.gourpId = gourpId;
     }
 
@@ -88,11 +89,11 @@ public class Node implements Serializable {
         } else if (!gourpId.equals(other.gourpId)) {
             return false;
         }
-        if (inetAddress == null) {
-            if (other.inetAddress != null) {
+        if (inetSocketAddress == null) {
+            if (other.inetSocketAddress != null) {
                 return false;
             }
-        } else if (!inetAddress.equals(other.inetAddress)) {
+        } else if (!inetSocketAddress.equals(other.inetSocketAddress)) {
             return false;
         }
         if (lastHeartbeatReceivedAt != other.lastHeartbeatReceivedAt) {
@@ -105,8 +106,8 @@ public class Node implements Serializable {
         return gourpId;
     }
 
-    public InetAddress getInetAddress() {
-        return inetAddress;
+    public InetSocketAddress getInetSocketAddress() {
+        return inetSocketAddress;
     }
 
     public long getLastHeartbeatReceivedAt() {
@@ -118,15 +119,15 @@ public class Node implements Serializable {
         final int prime = 31;
         int result = 1;
         result = (prime * result) + ((gourpId == null) ? 0 : gourpId.hashCode());
-        result = (prime * result) + ((inetAddress == null) ? 0 : inetAddress.hashCode());
+        result = (prime * result) + ((inetSocketAddress == null) ? 0 : inetSocketAddress.hashCode());
         result = (prime * result) + (int) (lastHeartbeatReceivedAt ^ (lastHeartbeatReceivedAt >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
-        return "Node [inetAddress=" + inetAddress + ", lastHeartbeatReceivedAt=" + lastHeartbeatReceivedAt
-                + ", gourpId=" + gourpId + "]";
+        return "Node [inetSocketAddress=" + inetSocketAddress + ", lastHeartbeatReceivedAt="
+                + lastHeartbeatReceivedAt + ", gourpId=" + gourpId + "]";
     }
 
 }
