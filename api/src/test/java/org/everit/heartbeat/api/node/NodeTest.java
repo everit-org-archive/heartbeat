@@ -20,6 +20,7 @@ public class NodeTest {
             new Node(null, 0, null);
             Assert.fail("constructor should fail with IllegalArgumentException in case of null inetAddress");
         } catch (IllegalArgumentException e) {
+            Assert.assertTrue(true);
         }
     }
 
@@ -33,6 +34,9 @@ public class NodeTest {
 
     /**
      * Test the constructor of the Node class with valid parameters.
+     * 
+     * @throws UnknownHostException
+     *             If can't get InetAddress.
      */
     @Test
     public void testSuccess() throws UnknownHostException {

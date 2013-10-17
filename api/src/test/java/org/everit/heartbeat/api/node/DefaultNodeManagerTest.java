@@ -16,6 +16,7 @@ public class DefaultNodeManagerTest {
      * Testing the addNode() and getAllNodes() function of the DefaultNodeManager class.
      * 
      * @throws UnknownHostException
+     *             If can't get InetAddress.
      */
     @Test
     public void addAndGetNodeTest() throws UnknownHostException {
@@ -56,6 +57,7 @@ public class DefaultNodeManagerTest {
      * Testing the getLiveNodes() method.
      * 
      * @throws UnknownHostException
+     *             If can't get InetAddress.
      */
     @Test
     public void getLiveNodesTest() throws UnknownHostException {
@@ -76,12 +78,6 @@ public class DefaultNodeManagerTest {
             Assert.assertTrue(i.getLastHeartbeatReceivedAt() > (lastHeartbeatReveivedAt - thresholdInMs));
         }
 
-    }
-
-    @Test
-    public void test() {
-        DefaultNodeManager test = new DefaultNodeManager();
-        Assert.assertNotNull(test);
     }
 
 }

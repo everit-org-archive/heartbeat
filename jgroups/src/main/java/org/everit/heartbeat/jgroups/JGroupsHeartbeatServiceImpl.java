@@ -64,6 +64,10 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
         this.clusterName = clusterName;
     }
 
+    public NodeMessage getOwnMessage() {
+        return ownMessage;
+    }
+
     private void messageSender() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -101,31 +105,36 @@ public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage
     public void start() {
         try {
             channel = new JChannel();
-            channel.connect(clusterName);
-            channel.setReceiver(new ReceiverAdapter() {
-                @Override
-                public void receive(final Message msg) {
-                    NodeMessage message = (NodeMessage) msg.getObject();
-                    try {
-                        Node nodeToAdd = new Node(InetAddress.getByName(message.getAddress()), System
-                                .currentTimeMillis(), message.getGroupId());
-                        nodeManager.addNode(nodeToAdd);
-
-                        if (messageListener != null) {
-                            messageListener.afterMessageReceived(msg);
-                        }
-                    } catch (UnknownHostException e) {
-                        LOGGER.error(
-                                "Failed to get InetAddress from message.getAddress(). No IP address for the host could be found",
-                                e);
-                    }
-
-                }
-            });
         } catch (Exception e) {
-            LOGGER.error("Failed to create JChannel or connect to Cluster. " + e.getMessage(), e);
-            throw new RuntimeException("Failed to create JChannel or connect to Cluster. " + e.getMessage(), e);
+            LOGGER.error("Failed to create JChannel. " + e.getMessage(), e);
+            throw new RuntimeException("Failed to create JChannel. " + e.getMessage(), e);
         }
+        try {
+            channel.connect(clusterName);
+        } catch (Exception e) {
+            LOGGER.error("Failed to connect to the Cluster. " + e.getMessage(), e);
+            throw new RuntimeException("Failed to connect to the Cluster. " + e.getMessage(), e);
+        }
+        channel.setReceiver(new ReceiverAdapter() {
+            @Override
+            public void receive(final Message msg) {
+                NodeMessage message = (NodeMessage) msg.getObject();
+                try {
+                    Node nodeToAdd = new Node(InetAddress.getByName(message.getAddress()), System
+                            .currentTimeMillis(), message.getGroupId());
+                    nodeManager.addNode(nodeToAdd);
+
+                    if (messageListener != null) {
+                        messageListener.afterMessageReceived(msg);
+                    }
+                } catch (UnknownHostException e) {
+                    LOGGER.error(
+                            "Failed to get InetAddress from message.getAddress(). No IP address for the host could be found.",
+                            e);
+                }
+
+            }
+        });
         messageSender();
     }
 

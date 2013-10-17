@@ -35,14 +35,14 @@ public class JGroupsHeatbeatServiceImplTest {
         service2.setPeriod(2000);
 
         service1.start();
-        Thread.sleep(100);
+        Thread.sleep(200);
 
         list1 = Arrays.asList(manager1.getAllNodes());
         Assert.assertFalse(list1.isEmpty());
         Assert.assertTrue(list1.size() == 1);
 
         service2.start();
-        Thread.sleep(100);
+        Thread.sleep(200);
 
         list2 = Arrays.asList(manager2.getAllNodes());
         Assert.assertFalse(list2.isEmpty());
@@ -81,6 +81,20 @@ public class JGroupsHeatbeatServiceImplTest {
         }
 
         service3.stop();
+
+        service1.getOwnMessage().setGroupId("testGroupId");
+        Thread.sleep(2000);
+
+        list1 = Arrays.asList(manager1.getAllNodes());
+        boolean contains = false;
+        for (Node node : list1) {
+            if (node.getGourpId() != null) {
+                if (node.getGourpId().equals("testGroupId")) {
+                    contains = true;
+                }
+            }
+        }
+        Assert.assertTrue(contains);
 
         service1.setMessage(new NodeMessage("192.2.2.1", "hello"));
 
