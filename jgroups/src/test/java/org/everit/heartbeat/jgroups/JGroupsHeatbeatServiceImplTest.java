@@ -12,11 +12,11 @@ import org.junit.Test;
 
 public class JGroupsHeatbeatServiceImplTest {
 
-    NodeManager manager1;
-    NodeManager manager2;
-    NodeManager manager3;
-    List<Node> list1;
-    List<Node> list2;
+    private NodeManager manager1;
+    private NodeManager manager2;
+    private NodeManager manager3;
+    private List<Node> list1;
+    private List<Node> list2;
 
     @Test
     public void test() throws InterruptedException {
@@ -25,11 +25,11 @@ public class JGroupsHeatbeatServiceImplTest {
         manager2 = new DefaultNodeManager();
         manager3 = new DefaultNodeManager();
         JGroupsHeartbeatServiceImpl service1 = new JGroupsHeartbeatServiceImpl(manager1,
-                new NodeMessage("192.1.1.1", 10), "theCluster");
+                new NodeMessage("192.1.1.1", 10), "theCluster", null);
         JGroupsHeartbeatServiceImpl service2 = new JGroupsHeartbeatServiceImpl(manager2,
-                new NodeMessage("192.1.1.2", 10), "theCluster");
+                new NodeMessage("192.1.1.2", 10), "theCluster", null);
         JGroupsHeartbeatServiceImpl service3 = new JGroupsHeartbeatServiceImpl(manager3,
-                new NodeMessage("192.1.1.3", 10), "anotherCluster");
+                new NodeMessage("192.1.1.3", 10), "anotherCluster", null);
 
         service1.setPeriod(1000);
         service2.setPeriod(2000);
@@ -88,10 +88,8 @@ public class JGroupsHeatbeatServiceImplTest {
         list1 = Arrays.asList(manager1.getAllNodes());
         boolean contains = false;
         for (Node node : list1) {
-            if (node.getGourpId() != null) {
-                if (node.getGourpId().equals("testGroupId")) {
-                    contains = true;
-                }
+            if ("testGroupId".equals(node.getGourpId())) {
+                contains = true;
             }
         }
         Assert.assertTrue(contains);

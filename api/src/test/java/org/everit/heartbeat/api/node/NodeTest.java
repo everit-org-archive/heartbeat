@@ -25,14 +25,6 @@ public class NodeTest {
     }
 
     /**
-     * Test the constructor of the Node class for nul parameter no2.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorInetAddressNullArg2() {
-        new Node(null, 0, null);
-    }
-
-    /**
      * Test the constructor of the Node class with valid parameters.
      * 
      * @throws UnknownHostException

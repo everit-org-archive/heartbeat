@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * A Class that represents a type of heartbeat message.
  */
-public class NodeMessage implements Serializable {
+public final class NodeMessage implements Serializable {
 
     /**
      * Serial version UID.
@@ -25,7 +25,7 @@ public class NodeMessage implements Serializable {
     /**
      * The groupId of the represented Node.
      */
-    private String groupId = null;
+    private final String groupId;
 
     /**
      * Constructor.
@@ -39,6 +39,7 @@ public class NodeMessage implements Serializable {
         super();
         this.address = address;
         this.port = port;
+        groupId = null;
     }
 
     /**
@@ -68,10 +69,6 @@ public class NodeMessage implements Serializable {
 
     public int getPort() {
         return port;
-    }
-
-    public void setGroupId(final String groupId) {
-        this.groupId = groupId;
     }
 
     @Override
