@@ -49,9 +49,9 @@
 						<Import-Package>
 							*
 						</Import-Package>
-                        <Export-Package>
-                            org.everit.heartbeat.jgroups
-                        </Export-Package>
+						<Export-Package>
+							org.everit.heartbeat.jgroups
+						</Export-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -68,6 +68,17 @@
 			<groupId>org.jgroups</groupId>
 			<artifactId>jgroups</artifactId>
 			<version>3.3.5.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

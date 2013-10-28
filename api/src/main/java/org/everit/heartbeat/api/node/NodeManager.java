@@ -21,7 +21,9 @@ package org.everit.heartbeat.api.node;
  * MA 02110-1301  USA
  */
 
-
+/**
+ * An interface which provides functionality to add new Node to the managed ones.
+ */
 public interface NodeManager extends NodeProvider {
 
     /**
@@ -30,6 +32,8 @@ public interface NodeManager extends NodeProvider {
      * @param node
      *            The node to add.
      * @return The previous value associated to the node or <code>null</code> if the node was not present in the list.
+     * @throws IllegalArgumentException
+     *             If the <code>node</code> argument is <code>null</code>.
      */
     Node addNode(Node node);
 
