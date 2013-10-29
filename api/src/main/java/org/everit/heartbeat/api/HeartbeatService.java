@@ -26,8 +26,6 @@ import java.io.Serializable;
 /**
  * Service interface to manage heartbeat messaging.
  * 
- * @see ClusteringHeartbeatService
- * 
  * @param <M>
  *            The type of the message that will be sent in the heartbeat message.
  */

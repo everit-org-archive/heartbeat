@@ -21,54 +21,121 @@ package org.everit.heartbeat.jgroups;
  * MA 02110-1301  USA
  */
 
-import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.everit.heartbeat.api.HeartbeatService;
 import org.everit.heartbeat.api.MessageListener;
-import org.everit.heartbeat.api.node.NodeProvider;
+import org.everit.heartbeat.api.node.Node;
+import org.everit.heartbeat.api.node.NodeManager;
+import org.everit.heartbeat.api.node.NodeMessage;
+import org.jgroups.JChannel;
+import org.jgroups.Message;
+import org.jgroups.ReceiverAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The implementation of {@link HeartbeatService} that sends and receives heartbeat messages via JGroups.
  * 
  * @see http://www.jgroups.org/
  * 
- * @param <M>
+ * @param <NodeMessage>
  *            The type of the message that will be sent in the heartbeat message.
  */
-public class JGroupsHeartbeatServiceImpl<M extends Serializable> implements HeartbeatService<M> {
+public class JGroupsHeartbeatServiceImpl implements HeartbeatService<NodeMessage> {
 
-    private final NodeProvider nodeProvider;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JGroupsHeartbeatServiceImpl.class);
+    private final NodeManager nodeManager;
+    private JChannel channel;
+    private long period = 1000;
+    private NodeMessage nodeMessage;
+    private MessageListener messageListener;
+    private String clusterName;
+    private Timer timer;
 
-    public JGroupsHeartbeatServiceImpl(final NodeProvider nodeProvider) {
+    public JGroupsHeartbeatServiceImpl(final NodeManager nodeManager, final NodeMessage nodeMessage,
+            final String clusterName, final MessageListener messageListener) {
         super();
-        this.nodeProvider = nodeProvider;
+        this.nodeManager = nodeManager;
+        this.nodeMessage = nodeMessage;
+        this.clusterName = clusterName;
+        this.messageListener = messageListener;
     }
 
     @Override
-    public void setMessage(final M message) {
-        // TODO Implement
+    public void setMessage(final NodeMessage message) {
+        nodeMessage = message;
     }
 
     @Override
     public void setMessageListener(final MessageListener messageListener) {
-        // TODO Implement
-
+        this.messageListener = messageListener;
     }
 
     @Override
     public void setPeriod(final long period) {
-        // TODO Implement
-
+        if (period <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.period = period;
     }
 
     @Override
     public void start() {
-        // TODO Implement
+        try {
+            channel = new JChannel();
+        } catch (Exception e) {
+            LOGGER.error("Failed to create JChannel.", e);
+        }
+        try {
+            channel.connect(clusterName);
+        } catch (Exception e) {
+            LOGGER.error("Failed to connect to the Cluster.", e);
+        }
+
+        try {
+            channel.setReceiver(new ReceiverAdapter() {
+                @Override
+                public void receive(final Message msg) {
+                    NodeMessage message = (NodeMessage) msg.getObject();
+
+                    Node nodeToAdd = new Node(InetSocketAddress.createUnresolved(message.getAddress(),
+                            message.getPort()), System
+                            .currentTimeMillis(), message.getGroupId());
+                    nodeManager.addNode(nodeToAdd);
+
+                    if (messageListener != null) {
+                        messageListener.afterMessageReceived(msg);
+                    }
+
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.error("Failed to set the reciever for the channel.", e);
+        }
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    if (channel == null) {
+                        throw new Exception("Connection to the JChannel was not successful.");
+                    }
+                    Message msg = new Message(null, nodeMessage);
+                    channel.send(msg);
+                } catch (Exception e) {
+                    LOGGER.error("Failed to send heartbeat message", e);
+                }
+            }
+        }, 0, period);
     }
 
     @Override
     public void stop() {
-        // TODO Implement
+        timer.cancel();
+        channel.close();
     }
-
 }

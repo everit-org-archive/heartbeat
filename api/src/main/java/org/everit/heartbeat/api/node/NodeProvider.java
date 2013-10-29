@@ -39,17 +39,12 @@ public interface NodeProvider {
      * <ul>
      * <li>The timestamp of the last heartbeat message received from the node is greater than
      * <code>(System.currentTimeMillis() - thresholdInMs)</code>.</li>
-     * <li>The address of the node equals to the address of the current node or not, depending on the
-     * <code>includingCurrentNode</code> parameter</li>
      * </ul>
      * 
      * @param thresholdInMs
      *            The threshold in milliseconds.
-     * @param includingCurrentNode
-     *            <code>true</code> if the query must include the current node in the result, <code>false</code> if the
-     *            query must exclude the current node from the result.
      * @return The {@link Node}s.
      */
-    Node[] getLiveNodes(long thresholdInMs, boolean includingCurrentNode);
+    Node[] getLiveNodes(long thresholdInMs);
 
 }

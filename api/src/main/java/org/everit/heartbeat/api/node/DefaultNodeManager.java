@@ -21,9 +21,12 @@ package org.everit.heartbeat.api.node;
  * MA 02110-1301  USA
  */
 
-import java.net.InetAddress;
-import java.util.HashMap;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The default implementation of the {@link NodeProvider} that gives the default node handling (adding and querying)
@@ -34,24 +37,38 @@ public class DefaultNodeManager implements NodeManager {
     /**
      * The nodes belonging to this cluster.
      */
-    private final Map<InetAddress, Node> nodes = new HashMap<InetAddress, Node>();
+    private final Map<InetSocketAddress, Node> nodes = new ConcurrentHashMap<InetSocketAddress, Node>();
 
     @Override
     public Node addNode(final Node node) {
-        // TODO Implement
-        return null;
+        if (node == null) {
+            throw new IllegalArgumentException();
+        }
+        return nodes.put(node.getInetSocketAddress(), node);
     }
 
     @Override
     public Node[] getAllNodes() {
-        // TODO Implement
-        return null;
+        List<Node> listOfNodes = new ArrayList<Node>();
+
+        for (Entry<InetSocketAddress, Node> entry : nodes.entrySet()) {
+            listOfNodes.add(entry.getValue());
+        }
+
+        return listOfNodes.toArray(new Node[] {});
     }
 
     @Override
-    public Node[] getLiveNodes(final long thresholdInMs, final boolean includingCurrentNode) {
-        // TODO Implement
-        return null;
+    public Node[] getLiveNodes(final long thresholdInMs) {
+        List<Node> listOfNodes = new ArrayList<Node>();
+
+        for (Entry<InetSocketAddress, Node> entry : nodes.entrySet()) {
+            if (entry.getValue().getLastHeartbeatReceivedAt() > (System.currentTimeMillis() - thresholdInMs)) {
+                listOfNodes.add(entry.getValue());
+            }
+        }
+
+        return listOfNodes.toArray(new Node[] {});
     }
 
 }
