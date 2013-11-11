@@ -30,10 +30,10 @@ public interface MessageListener {
     /**
      * Callback method that will be invoked after a heartbeat message is received.
      * 
-     * @param message
+     * @param object
      *            The original heartbeat message that type is depends on the implementation of the
      *            {@link HeartbeatService}.
      */
-    void afterMessageReceived(Object message);
+    void afterMessageReceived(Object object);
 
 }

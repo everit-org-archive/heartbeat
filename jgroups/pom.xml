@@ -37,6 +37,10 @@
 
 	<packaging>bundle</packaging>
 
+	<properties>
+		<org.slf4j.version>1.6.5</org.slf4j.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -52,6 +56,7 @@
 						<Export-Package>
 							org.everit.heartbeat.jgroups
 						</Export-Package>
+						<Fragment-Host>org.jgroups</Fragment-Host>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -72,12 +77,18 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
+			<version>${org.slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${org.slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
