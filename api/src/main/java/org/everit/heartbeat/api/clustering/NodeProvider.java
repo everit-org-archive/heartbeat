@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.node;
+package org.everit.heartbeat.api.clustering;
 
 /*
  * Copyright (c) 2013, Everit Kft.

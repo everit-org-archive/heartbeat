@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.node;
+package org.everit.heartbeat.api.clustering;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -46,20 +46,19 @@ public class DefaultNodeManagerTest {
 
         InetSocketAddress inetSocketAddress = InetSocketAddress.createUnresolved("192.168.1.1", 400);
 
-        Node node = new Node(inetSocketAddress, 111, "111");
-        Node node2 = new Node(inetSocketAddress, 222, "333");
+        Node node1 = new Node(inetSocketAddress, 111);
+        Node node2 = new Node(inetSocketAddress, 222);
 
-        Assert.assertNull(defaultNodeManager.addNode(node));
+        Assert.assertNull(defaultNodeManager.addNode(node1));
 
-        Assert.assertEquals(node, defaultNodeManager.addNode(node2));
+        Assert.assertEquals(node1, defaultNodeManager.addNode(node2));
 
-        Assert.assertFalse(Arrays.asList(defaultNodeManager.getAllNodes()).contains(node));
+        Assert.assertFalse(Arrays.asList(defaultNodeManager.getAllNodes()).contains(node1));
         Assert.assertTrue(Arrays.asList(defaultNodeManager.getAllNodes()).contains(node2));
 
-        Node node3 = new Node(InetSocketAddress.createUnresolved("192.168.1.2", 400), 222, "333");
+        Node node3 = new Node(InetSocketAddress.createUnresolved("192.168.1.2", 400), 222);
         defaultNodeManager.addNode(node3);
-        Node node4 =
-                new Node(InetSocketAddress.createUnresolved("192.168.1.3", 400), 333, "333");
+        Node node4 = new Node(InetSocketAddress.createUnresolved("192.168.1.3", 400), 333);
         defaultNodeManager.addNode(node4);
 
         Assert.assertTrue(Arrays.asList(defaultNodeManager.getAllNodes()).size() == 3);
@@ -89,11 +88,11 @@ public class DefaultNodeManagerTest {
         long thresholdInMs = 2000;
         long lastHeartbeatReveivedAt = System.currentTimeMillis();
 
-        Node node = new Node(inetSocketAddress, 100, "111");
-        Node node2 = new Node(InetSocketAddress.createUnresolved("192.168.1.2", 400), lastHeartbeatReveivedAt, "333");
+        Node node1 = new Node(inetSocketAddress, 100);
+        Node node2 = new Node(InetSocketAddress.createUnresolved("192.168.1.2", 400), lastHeartbeatReveivedAt);
         Node node3 = new Node(InetSocketAddress.createUnresolved("192.168.1.3", 400), lastHeartbeatReveivedAt
-                - thresholdInMs, "333");
-        defaultNodeManager.addNode(node);
+                - thresholdInMs);
+        defaultNodeManager.addNode(node1);
         defaultNodeManager.addNode(node2);
         defaultNodeManager.addNode(node3);
 

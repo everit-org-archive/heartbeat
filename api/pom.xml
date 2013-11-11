@@ -51,8 +51,7 @@
 						</Import-Package>
 						<Export-Package>
 							org.everit.heartbeat.api,
-							org.everit.heartbeat.api.dto,
-							org.everit.heartbeat.api.node
+							org.everit.heartbeat.api.clustering
 						</Export-Package>
 					</instructions>
 				</configuration>

@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.node;
+package org.everit.heartbeat.api.clustering;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -45,29 +45,21 @@ public class Node implements Serializable {
     private final long lastHeartbeatReceivedAt;
 
     /**
-     * The ID of the group inside the cluster.
-     */
-    private final String gourpId;
-
-    /**
      * Constructor.
      * 
      * @param inetSocketAddress
      *            The address of the node.
      * @param lastHeartbeatReceivedAt
      *            The timestamp of the last received heartbeat message from this node.
-     * @param gourpId
-     *            The ID of the group inside the cluster.
      */
     public Node(final InetSocketAddress inetSocketAddress,
-            final long lastHeartbeatReceivedAt, final String gourpId) {
+            final long lastHeartbeatReceivedAt) {
         super();
         if (inetSocketAddress == null) {
-            throw new IllegalArgumentException("inetSocketAddress can not be null.");
+            throw new IllegalArgumentException("inetSocketAddress cannot be null");
         }
         this.inetSocketAddress = inetSocketAddress;
         this.lastHeartbeatReceivedAt = lastHeartbeatReceivedAt;
-        this.gourpId = gourpId;
     }
 
     @Override
@@ -82,13 +74,6 @@ public class Node implements Serializable {
             return false;
         }
         Node other = (Node) obj;
-        if (gourpId == null) {
-            if (other.gourpId != null) {
-                return false;
-            }
-        } else if (!gourpId.equals(other.gourpId)) {
-            return false;
-        }
         if (inetSocketAddress == null) {
             if (other.inetSocketAddress != null) {
                 return false;
@@ -100,10 +85,6 @@ public class Node implements Serializable {
             return false;
         }
         return true;
-    }
-
-    public String getGourpId() {
-        return gourpId;
     }
 
     public InetSocketAddress getInetSocketAddress() {
@@ -118,7 +99,6 @@ public class Node implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + ((gourpId == null) ? 0 : gourpId.hashCode());
         result = (prime * result) + ((inetSocketAddress == null) ? 0 : inetSocketAddress.hashCode());
         result = (prime * result) + (int) (lastHeartbeatReceivedAt ^ (lastHeartbeatReceivedAt >>> 32));
         return result;
@@ -127,7 +107,7 @@ public class Node implements Serializable {
     @Override
     public String toString() {
         return "Node [inetSocketAddress=" + inetSocketAddress + ", lastHeartbeatReceivedAt="
-                + lastHeartbeatReceivedAt + ", gourpId=" + gourpId + "]";
+                + lastHeartbeatReceivedAt + "]";
     }
 
 }

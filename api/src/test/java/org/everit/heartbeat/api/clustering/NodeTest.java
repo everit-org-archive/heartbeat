@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.node;
+package org.everit.heartbeat.api.clustering;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -24,6 +24,7 @@ package org.everit.heartbeat.api.node;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
+import org.everit.heartbeat.api.clustering.Node;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class NodeTest {
     @Test
     public void testConstructorInetAddressNullArg() {
         try {
-            new Node(null, 0, null);
+            new Node(null, 0);
             Assert.fail("constructor should fail with IllegalArgumentException in case of null inetAddress");
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(true);
@@ -53,19 +54,13 @@ public class NodeTest {
      */
     @Test
     public void testSuccess() throws UnknownHostException {
-
         InetSocketAddress inetSocketAddress = InetSocketAddress.createUnresolved("192.168.1.1", 500);
         long lastHeartbeatReceivedAt = 123;
-        String gourpId = "123";
-        Node testNode = new Node(inetSocketAddress, lastHeartbeatReceivedAt, gourpId);
+        Node node = new Node(inetSocketAddress, lastHeartbeatReceivedAt);
 
-        Assert.assertNotNull(testNode);
-        Assert.assertEquals(inetSocketAddress,
-                testNode.getInetSocketAddress());
-        Assert.assertEquals(lastHeartbeatReceivedAt,
-                testNode.getLastHeartbeatReceivedAt());
-        Assert.assertEquals(gourpId,
-                testNode.getGourpId());
+        Assert.assertNotNull(node);
+        Assert.assertEquals(inetSocketAddress, node.getInetSocketAddress());
+        Assert.assertEquals(lastHeartbeatReceivedAt, node.getLastHeartbeatReceivedAt());
 
     }
 

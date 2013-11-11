@@ -1,4 +1,4 @@
-package org.everit.heartbeat.api.node;
+package org.everit.heartbeat.api.clustering;
 
 /*
  * Copyright (c) 2013, Everit Kft.
@@ -25,7 +25,6 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,33 +41,26 @@ public class DefaultNodeManager implements NodeManager {
     @Override
     public Node addNode(final Node node) {
         if (node == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("node cannot be null");
         }
         return nodes.put(node.getInetSocketAddress(), node);
     }
 
     @Override
     public Node[] getAllNodes() {
-        List<Node> listOfNodes = new ArrayList<Node>();
-
-        for (Entry<InetSocketAddress, Node> entry : nodes.entrySet()) {
-            listOfNodes.add(entry.getValue());
-        }
-
-        return listOfNodes.toArray(new Node[] {});
+        return nodes.values().toArray(new Node[] {});
     }
 
     @Override
     public Node[] getLiveNodes(final long thresholdInMs) {
-        List<Node> listOfNodes = new ArrayList<Node>();
-
-        for (Entry<InetSocketAddress, Node> entry : nodes.entrySet()) {
-            if (entry.getValue().getLastHeartbeatReceivedAt() > (System.currentTimeMillis() - thresholdInMs)) {
-                listOfNodes.add(entry.getValue());
+        List<Node> liveNodes = new ArrayList<Node>();
+        long deadline = System.currentTimeMillis() - thresholdInMs;
+        for (Node node : nodes.values()) {
+            if (node.getLastHeartbeatReceivedAt() > deadline) {
+                liveNodes.add(node);
             }
         }
-
-        return listOfNodes.toArray(new Node[] {});
+        return liveNodes.toArray(new Node[] {});
     }
 
 }

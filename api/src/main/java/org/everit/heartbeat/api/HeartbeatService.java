@@ -32,39 +32,7 @@ import java.io.Serializable;
 public interface HeartbeatService<M extends Serializable> {
 
     /**
-     * Sets the heartbeat message that is sent by this component. It can be a payload of the heartbeat message, it
-     * depends on the implementation.
-     * 
-     * @param message
-     *            The heartbeat message. It can be <code>null</code> if no custom message content is required.
-     */
-    void setMessage(M message);
-
-    /**
-     * Sets the message listener that will be invoked after receiving a heartbeat message. The message listener can be
-     * configured before the heartbeating started by {@link #start()}.
-     * 
-     * @param messageListener
-     *            The message listener to use when a heartbeat message is received or <code>null</code> if no
-     *            customization is required.
-     * @throws IllegalStateException
-     *             If the method invoked while the message sending is still in progress.
-     */
-    void setMessageListener(MessageListener messageListener);
-
-    /**
-     * Sets the period in milliseconds between heartbeat messages.
-     * 
-     * @param period
-     *            The milliseconds between sending two heartbeat message. Must be greater than 0.
-     * @throws IllegalArgumentException
-     *             If the period parameter is less than or equal to 0.
-     */
-    void setPeriod(long period);
-
-    /**
-     * Starts the process that sends and receives the heartbeat messages. The heartbeating period is configured by
-     * {@link #setPeriod(long)} and the message content is configured by {@link #setMessage(Serializable)}.
+     * Starts the process that sends and receives the heartbeat messages.
      */
     void start();
 
